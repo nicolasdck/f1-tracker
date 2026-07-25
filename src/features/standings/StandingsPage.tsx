@@ -37,7 +37,7 @@ export function StandingsPage() {
 
   const driverMeta = useMemo(() => {
     if (!standings) return [];
-    return standings.slice(0, 6).map((d) => ({
+    return standings.map((d) => ({
       name: `${d.Driver.givenName[0]}. ${d.Driver.familyName}`,
       teamId: CONSTRUCTOR_ID_MAP[d.Constructors[0]?.constructorId] ?? "mercedes",
     }));

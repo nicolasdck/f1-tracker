@@ -10,11 +10,22 @@ async function jolpicaFetch<T>(path: string): Promise<T> {
   return res.json();
 }
 
+export interface RaceSession {
+  date: string;
+  time?: string;
+}
+
 export interface Race {
   round: string;
   raceName: string;
   date: string;
   time?: string;
+  FirstPractice?: RaceSession;
+  SecondPractice?: RaceSession;
+  ThirdPractice?: RaceSession;
+  Qualifying?: RaceSession;
+  Sprint?: RaceSession;
+  SprintQualifying?: RaceSession;
   Circuit: {
     circuitId: string;
     circuitName: string;

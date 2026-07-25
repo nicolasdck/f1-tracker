@@ -29,7 +29,7 @@ export function TeamSelector() {
             <img
               src={`/${t.id}.jpg`}
               alt={t.name}
-              className="h-12 w-12 rounded object-cover"
+              className="h-12 w-full rounded object-contain"
             />
             <span
               className="text-center text-xs font-medium"

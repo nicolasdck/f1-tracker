@@ -62,11 +62,14 @@ function InstallBanner() {
 	return (
 		<div
 			className="flex items-center justify-between gap-3 px-4 py-2 text-sm"
-			style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-ink)' }}
+			style={{
+				backgroundColor: 'var(--color-primary)',
+				color: 'var(--color-primary-ink)',
+			}}
 		>
 			<span className="flex items-center gap-2 font-medium">
 				<Download size={16} />
-				Installer Paddock sur cet appareil
+				Installer "F1 Tracker" sur cet appareil
 			</span>
 			<button
 				onClick={promptInstall}
