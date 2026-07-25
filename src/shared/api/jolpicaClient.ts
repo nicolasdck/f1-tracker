@@ -36,14 +36,14 @@ export interface Race {
 export interface DriverStanding {
   position: string;
   points: string;
-  Driver: { driverId: string; givenName: string; familyName: string };
+  Driver: { driverId: string; givenName: string; familyName: string; nationality: string };
   Constructors: { constructorId: string; name: string }[];
 }
 
 export interface ConstructorStanding {
   position: string;
   points: string;
-  Constructor: { constructorId: string; name: string };
+  Constructor: { constructorId: string; name: string; nationality: string };
 }
 
 export interface RaceResult {
@@ -53,6 +53,25 @@ export interface RaceResult {
   Driver: { driverId: string; givenName: string; familyName: string };
   Constructor: { constructorId: string; name: string };
   status: string;
+  Time?: { time: string };
+}
+
+export interface QualifyingResult {
+  position: string;
+  Driver: { driverId: string; givenName: string; familyName: string };
+  Constructor: { constructorId: string; name: string };
+  Q1?: string;
+  Q2?: string;
+  Q3?: string;
+}
+
+export interface SprintResult {
+  position: string;
+  points: string;
+  Driver: { driverId: string; givenName: string; familyName: string };
+  Constructor: { constructorId: string; name: string };
+  status: string;
+  Time?: { time: string };
 }
 
 export const jolpica = {
@@ -64,14 +83,24 @@ export const jolpica = {
       `/current/${round}/results`
     ),
 
+  qualifyingResults: (round: number) =>
+    jolpicaFetch<{ MRData: { RaceTable: { Races: (Race & { QualifyingResults: QualifyingResult[] })[] } } }>(
+      `/current/${round}/qualifying`
+    ),
+
+  sprintResults: (round: number) =>
+    jolpicaFetch<{ MRData: { RaceTable: { Races: (Race & { SprintResults: SprintResult[] })[] } } }>(
+      `/current/${round}/sprint`
+    ),
+
   driverStandings: (round?: number) =>
     jolpicaFetch<{ MRData: { StandingsTable: { StandingsLists: { DriverStandings: DriverStanding[] }[] } } }>(
       round ? `/current/${round}/driverStandings` : "/current/driverStandings"
     ),
 
-  constructorStandings: () =>
+  constructorStandings: (round?: number) =>
     jolpicaFetch<{ MRData: { StandingsTable: { StandingsLists: { ConstructorStandings: ConstructorStanding[] }[] } } }>(
-      "/current/constructorStandings"
+      round ? `/current/${round}/constructorStandings` : "/current/constructorStandings"
     ),
 
   circuitResults: (circuitId: string) =>

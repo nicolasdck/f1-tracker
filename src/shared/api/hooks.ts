@@ -8,11 +8,27 @@ export function useCurrentSeason() {
   });
 }
 
-export function useRaceResults(round: number) {
+export function useRaceResults(round: number, enabled = true) {
   return useQuery({
     queryKey: ["race", round, "results"],
     queryFn: async () => (await jolpica.raceResults(round)).MRData.RaceTable.Races[0],
-    enabled: !!round,
+    enabled: !!round && enabled,
+  });
+}
+
+export function useQualifyingResults(round: number, enabled = true) {
+  return useQuery({
+    queryKey: ["race", round, "qualifying"],
+    queryFn: async () => (await jolpica.qualifyingResults(round)).MRData.RaceTable.Races[0],
+    enabled: !!round && enabled,
+  });
+}
+
+export function useSprintResults(round: number, enabled = true) {
+  return useQuery({
+    queryKey: ["race", round, "sprint"],
+    queryFn: async () => (await jolpica.sprintResults(round)).MRData.RaceTable.Races[0],
+    enabled: !!round && enabled,
   });
 }
 
@@ -24,11 +40,11 @@ export function useDriverStandings(round?: number) {
   });
 }
 
-export function useConstructorStandings() {
+export function useConstructorStandings(round?: number) {
   return useQuery({
-    queryKey: ["standings", "constructors"],
+    queryKey: ["standings", "constructors", round ?? "current"],
     queryFn: async () =>
-      (await jolpica.constructorStandings()).MRData.StandingsTable.StandingsLists[0]?.ConstructorStandings ?? [],
+      (await jolpica.constructorStandings(round)).MRData.StandingsTable.StandingsLists[0]?.ConstructorStandings ?? [],
   });
 }
 
@@ -36,12 +52,29 @@ export function useConstructorStandings() {
 // Mis en cache par TanStack Query, donc calcule une seule fois par saison.
 export function useStandingsEvolution(completedRounds: number[]) {
   return useQuery({
-    queryKey: ["standings", "evolution", completedRounds],
+    queryKey: ["standings", "evolution", "drivers", completedRounds],
     queryFn: async () => {
       const results = await Promise.all(
         completedRounds.map(async (round) => {
           const standings = (await jolpica.driverStandings(round)).MRData.StandingsTable
             .StandingsLists[0]?.DriverStandings ?? [];
+          return { round, standings };
+        })
+      );
+      return results;
+    },
+    enabled: completedRounds.length > 0,
+  });
+}
+
+export function useConstructorStandingsEvolution(completedRounds: number[]) {
+  return useQuery({
+    queryKey: ["standings", "evolution", "constructors", completedRounds],
+    queryFn: async () => {
+      const results = await Promise.all(
+        completedRounds.map(async (round) => {
+          const standings = (await jolpica.constructorStandings(round)).MRData.StandingsTable
+            .StandingsLists[0]?.ConstructorStandings ?? [];
           return { round, standings };
         })
       );

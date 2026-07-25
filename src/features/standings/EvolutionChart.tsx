@@ -12,10 +12,10 @@ import { getTeamTheme, TeamId } from "@/features/team-theme/teamThemes";
 
 interface EvolutionPoint {
   round: number;
-  [driverName: string]: number;
+  [seriesName: string]: number;
 }
 
-interface DriverMeta {
+interface SeriesMeta {
   name: string;
   teamId: TeamId;
 }
@@ -38,11 +38,11 @@ function EvolutionTooltip({ active, payload, label }: TooltipProps<number, strin
 
 export function EvolutionChart({
   data,
-  drivers,
+  series,
   favoriteTeam,
 }: {
   data: EvolutionPoint[];
-  drivers: DriverMeta[];
+  series: SeriesMeta[];
   favoriteTeam: TeamId;
 }) {
   return (
@@ -52,13 +52,13 @@ export function EvolutionChart({
         <XAxis dataKey="round" stroke="rgba(255,255,255,0.3)" fontSize={11} tickFormatter={(r) => `R${r}`} />
         <YAxis stroke="rgba(255,255,255,0.3)" fontSize={11} />
         <Tooltip content={<EvolutionTooltip />} />
-        {drivers.map((d) => (
+        {series.map((s) => (
           <Line
-            key={d.name}
+            key={s.name}
             type="monotone"
-            dataKey={d.name}
-            stroke={getTeamTheme(d.teamId).primary}
-            strokeWidth={d.teamId === favoriteTeam ? 3 : 1.5}
+            dataKey={s.name}
+            stroke={getTeamTheme(s.teamId).primary}
+            strokeWidth={s.teamId === favoriteTeam ? 3 : 1.5}
             dot={false}
           />
         ))}

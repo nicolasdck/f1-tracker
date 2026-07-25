@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Download, Settings } from 'lucide-react';
 import { TeamSelector } from '@/features/team-theme/TeamSelector';
 import { Modal } from '@/shared/ui/Modal';
@@ -9,6 +9,30 @@ import { RaceResultsPage } from '@/features/race-results/RaceResultsPage';
 import { StandingsPage } from '@/features/standings/StandingsPage';
 import { CircuitsPage } from '@/features/circuits/CircuitsPage';
 import { CircuitHistoryPage } from '@/features/circuits/CircuitHistoryPage';
+
+const LAST_PATH_KEY = 'f1-tracker:last-path';
+
+// Au premier chargement, si on atterrit sur la racine (ex: lancement de la PWA),
+// on redirige vers le dernier onglet visite plutot que de toujours revenir au Calendrier.
+function useRestoreLastPath() {
+	const location = useLocation();
+	const navigate = useNavigate();
+	const hasRestored = useRef(false);
+
+	useEffect(() => {
+		if (!hasRestored.current) {
+			hasRestored.current = true;
+			if (location.pathname === '/') {
+				const lastPath = localStorage.getItem(LAST_PATH_KEY);
+				if (lastPath && lastPath !== '/') {
+					navigate(lastPath, { replace: true });
+					return;
+				}
+			}
+		}
+		localStorage.setItem(LAST_PATH_KEY, location.pathname + location.search);
+	}, [location, navigate]);
+}
 
 const NAV = [
 	{ to: '/', label: 'Calendrier' },
@@ -83,6 +107,7 @@ function InstallBanner() {
 
 export default function App() {
 	const [settingsOpen, setSettingsOpen] = useState(false);
+	useRestoreLastPath();
 	return (
 		<div className="min-h-screen font-sans">
 			<Header onOpenSettings={() => setSettingsOpen(true)} />

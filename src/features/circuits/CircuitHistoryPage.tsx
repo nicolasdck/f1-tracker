@@ -27,6 +27,16 @@ export function CircuitHistoryPage() {
       <div className="mb-3 text-sm font-medium text-white">
         {sorted[0]?.Circuit.circuitName ?? circuitId} — historique des vainqueurs
       </div>
+      <div className="mb-4 flex items-center justify-center rounded-lg border border-white/8 bg-white/[0.02] p-6">
+        <img
+          src={`/circuits/${circuitId}.png`}
+          alt={`Tracé du circuit ${sorted[0]?.Circuit.circuitName ?? circuitId}`}
+          className="max-h-52 w-full object-contain"
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+          }}
+        />
+      </div>
       <div className="overflow-hidden rounded-lg border border-white/8">
         {sorted.map((race, i) => {
           const winner = race.Results?.[0];
