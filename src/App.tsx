@@ -15,6 +15,8 @@ import { RaceResultsPage } from '@/features/race-results/RaceResultsPage';
 import { StandingsPage } from '@/features/standings/StandingsPage';
 import { CircuitsPage } from '@/features/circuits/CircuitsPage';
 import { CircuitHistoryPage } from '@/features/circuits/CircuitHistoryPage';
+import { DriverProfilePage } from '@/features/drivers/DriverProfilePage';
+import { TeamProfilePage } from '@/features/teams/TeamProfilePage';
 
 const LAST_PATH_KEY = 'f1-tracker:last-path';
 
@@ -113,6 +115,7 @@ function InstallBanner() {
 
 export default function App() {
 	const [settingsOpen, setSettingsOpen] = useState(false);
+	useRestoreLastPath();
 	return (
 		<div className="min-h-screen font-sans">
 			<Header onOpenSettings={() => setSettingsOpen(true)} />
@@ -130,6 +133,8 @@ export default function App() {
 				<Route path="/standings" element={<StandingsPage />} />
 				<Route path="/circuits" element={<CircuitsPage />} />
 				<Route path="/circuits/:circuitId" element={<CircuitHistoryPage />} />
+				<Route path="/drivers/:driverId" element={<DriverProfilePage />} />
+				<Route path="/teams/:constructorId" element={<TeamProfilePage />} />
 			</Routes>
 		</div>
 	);

@@ -9,6 +9,7 @@ import { formatDate } from '@/shared/lib/date';
 import { getCountryFlagCode } from '@/shared/lib/flags';
 import { Flag } from '@/shared/ui/Flag';
 import { SessionsPanel } from './SessionsPanel';
+import { Countdown } from './Countdown';
 
 function isPast(dateStr: string) {
 	return new Date(dateStr) < new Date();
@@ -83,6 +84,11 @@ export function CalendarPage() {
 								<Badge>À venir</Badge>
 							)}
 						</div>
+						{isNext && (
+							<div className="mt-3">
+								<Countdown race={race} />
+							</div>
+						)}
 						{isNext && <SessionsPanel race={race} />}
 					</Card>
 				);

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { TableRow } from '@/shared/ui/Table';
 import { TeamLogo } from '@/shared/ui/TeamLogo';
 import { getTeamTheme, TeamId } from '@/features/team-theme/teamThemes';
@@ -5,6 +6,7 @@ import { CONSTRUCTOR_ID_MAP } from '@/features/team-theme/constructorIdMap';
 
 export interface ResultItem {
 	position: string;
+	driverId: string;
 	driverName: string;
 	constructorId: string;
 	detail: string;
@@ -34,8 +36,15 @@ export function ResultsList({
 					>
 						<div className="flex items-center gap-3">
 							<span className="w-5 font-mono text-white/40">{r.position}</span>
-							<TeamLogo teamId={mappedTeam} />
-							<span className="text-white">{r.driverName}</span>
+							<Link to={`/teams/${r.constructorId}`} onClick={(e) => e.stopPropagation()}>
+								<TeamLogo teamId={mappedTeam} />
+							</Link>
+							<Link
+								to={`/drivers/${r.driverId}`}
+								className="text-white hover:text-[var(--color-primary)]"
+							>
+								{r.driverName}
+							</Link>
 						</div>
 						<div className="text-right">
 							<div className="font-mono text-white/70">{r.detail}</div>

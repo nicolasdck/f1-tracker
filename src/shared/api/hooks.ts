@@ -117,3 +117,19 @@ export function useCircuitHistory(circuitId: string) {
     enabled: !!circuitId,
   });
 }
+
+export function useDriverSeasonResults(driverId: string) {
+  return useQuery({
+    queryKey: ["driver", driverId, "results"],
+    queryFn: async () => (await jolpica.driverSeasonResults(driverId)).MRData.RaceTable.Races,
+    enabled: !!driverId,
+  });
+}
+
+export function useConstructorSeasonResults(constructorId: string) {
+  return useQuery({
+    queryKey: ["constructor", constructorId, "results"],
+    queryFn: async () => (await jolpica.constructorSeasonResults(constructorId)).MRData.RaceTable.Races,
+    enabled: !!constructorId,
+  });
+}

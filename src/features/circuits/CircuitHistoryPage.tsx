@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Trophy } from 'lucide-react';
 import { useCircuitHistory } from '@/shared/api/hooks';
 import { Skeleton } from '@/shared/ui/Skeleton';
@@ -55,10 +55,15 @@ export function CircuitHistoryPage() {
 								{i === 0 && (
 									<Trophy size={12} style={{ color: 'var(--color-primary)' }} />
 								)}
-								<span className="text-white">
+								<Link
+									to={`/drivers/${winner.Driver.driverId}`}
+									className="text-white hover:text-[var(--color-primary)]"
+								>
 									{winner.Driver.givenName[0]}. {winner.Driver.familyName}
-								</span>
-								<TeamLogo teamId={mappedTeam} />
+								</Link>
+								<Link to={`/teams/${winner.Constructor.constructorId}`}>
+									<TeamLogo teamId={mappedTeam} />
+								</Link>
 							</div>
 						</TableRow>
 					);

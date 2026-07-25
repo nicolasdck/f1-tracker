@@ -33,33 +33,53 @@ export interface Race {
   };
 }
 
+export interface DriverInfo {
+  driverId: string;
+  givenName: string;
+  familyName: string;
+  nationality: string;
+  code?: string;
+  permanentNumber?: string;
+  dateOfBirth?: string;
+  url?: string;
+}
+
+export interface ConstructorInfo {
+  constructorId: string;
+  name: string;
+  nationality: string;
+  url?: string;
+}
+
 export interface DriverStanding {
   position: string;
   points: string;
-  Driver: { driverId: string; givenName: string; familyName: string; nationality: string };
-  Constructors: { constructorId: string; name: string }[];
+  wins: string;
+  Driver: DriverInfo;
+  Constructors: ConstructorInfo[];
 }
 
 export interface ConstructorStanding {
   position: string;
   points: string;
-  Constructor: { constructorId: string; name: string; nationality: string };
+  wins: string;
+  Constructor: ConstructorInfo;
 }
 
 export interface RaceResult {
   number: string;
   position: string;
   points: string;
-  Driver: { driverId: string; givenName: string; familyName: string };
-  Constructor: { constructorId: string; name: string };
+  Driver: DriverInfo;
+  Constructor: ConstructorInfo;
   status: string;
   Time?: { time: string };
 }
 
 export interface QualifyingResult {
   position: string;
-  Driver: { driverId: string; givenName: string; familyName: string };
-  Constructor: { constructorId: string; name: string };
+  Driver: DriverInfo;
+  Constructor: ConstructorInfo;
   Q1?: string;
   Q2?: string;
   Q3?: string;
@@ -68,8 +88,8 @@ export interface QualifyingResult {
 export interface SprintResult {
   position: string;
   points: string;
-  Driver: { driverId: string; givenName: string; familyName: string };
-  Constructor: { constructorId: string; name: string };
+  Driver: DriverInfo;
+  Constructor: ConstructorInfo;
   status: string;
   Time?: { time: string };
 }
@@ -106,5 +126,15 @@ export const jolpica = {
   circuitResults: (circuitId: string) =>
     jolpicaFetch<{ MRData: { RaceTable: { Races: (Race & { Results: RaceResult[] })[] } } }>(
       `/circuits/${circuitId}/results/1`
+    ),
+
+  driverSeasonResults: (driverId: string) =>
+    jolpicaFetch<{ MRData: { RaceTable: { Races: (Race & { Results: RaceResult[] })[] } } }>(
+      `/current/drivers/${driverId}/results`
+    ),
+
+  constructorSeasonResults: (constructorId: string) =>
+    jolpicaFetch<{ MRData: { RaceTable: { Races: (Race & { Results: RaceResult[] })[] } } }>(
+      `/current/constructors/${constructorId}/results`
     ),
 };

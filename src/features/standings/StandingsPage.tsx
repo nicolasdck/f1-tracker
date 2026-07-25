@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { TrendingUp } from 'lucide-react';
 import {
 	useConstructorStandings,
@@ -175,14 +176,19 @@ export function StandingsPage() {
 										<span className="w-5 font-mono text-white/40">
 											{d.position}
 										</span>
-										<TeamLogo teamId={mappedTeam} />
-										<span className="text-white">
+										<Link to={`/teams/${d.Constructors[0]?.constructorId}`}>
+											<TeamLogo teamId={mappedTeam} />
+										</Link>
+										<Link
+											to={`/drivers/${d.Driver.driverId}`}
+											className="text-white hover:text-[var(--color-primary)]"
+										>
 											<Flag
 												code={getNationalityFlagCode(d.Driver.nationality)}
 												className="mr-1.5"
 											/>
 											{d.Driver.givenName[0]}. {d.Driver.familyName}
-										</span>
+										</Link>
 									</div>
 									<span className="font-mono text-white/70">
 										{d.points} pts
@@ -209,14 +215,19 @@ export function StandingsPage() {
 										<span className="w-5 font-mono text-white/40">
 											{c.position}
 										</span>
-										<TeamLogo teamId={mappedTeam} />
-										<span className="text-white">
+										<Link to={`/teams/${c.Constructor.constructorId}`}>
+											<TeamLogo teamId={mappedTeam} />
+										</Link>
+										<Link
+											to={`/teams/${c.Constructor.constructorId}`}
+											className="text-white hover:text-[var(--color-primary)]"
+										>
 											<Flag
 												code={getNationalityFlagCode(c.Constructor.nationality)}
 												className="mr-1.5"
 											/>
 											{c.Constructor.name}
-										</span>
+										</Link>
 									</div>
 									<span className="font-mono text-white/70">
 										{c.points} pts

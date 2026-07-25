@@ -9,7 +9,7 @@ import { ResultsList } from "@/features/race-results/ResultsList";
 
 type SessionKind = "qualifying" | "sprint" | "race";
 
-interface SessionDef {
+export interface SessionDef {
   key: string;
   label: string;
   session: RaceSession;
@@ -19,7 +19,7 @@ interface SessionDef {
   resultsKind?: SessionKind;
 }
 
-function buildSessions(race: Race): SessionDef[] {
+export function buildSessions(race: Race): SessionDef[] {
   const defs: SessionDef[] = [
     { key: "fp1", label: "Essais Libres 1", session: race.FirstPractice, durationMin: 60 },
     { key: "fp2", label: "Essais Libres 2", session: race.SecondPractice, durationMin: 60 },
@@ -33,11 +33,11 @@ function buildSessions(race: Race): SessionDef[] {
   return defs.sort((a, b) => sessionStart(a.session) - sessionStart(b.session));
 }
 
-function sessionStart(session: RaceSession) {
+export function sessionStart(session: RaceSession) {
   return new Date(`${session.date}T${session.time ?? "00:00:00Z"}`).getTime();
 }
 
-function getStatus(session: RaceSession, durationMin: number): "upcoming" | "live" | "done" {
+export function getStatus(session: RaceSession, durationMin: number): "upcoming" | "live" | "done" {
   const start = sessionStart(session);
   const end = start + durationMin * 60_000;
   const now = Date.now();
@@ -74,11 +74,19 @@ function SessionResultsModal({
     kind === "qualifying" ? qualifying.isLoading : kind === "sprint" ? sprint.isLoading : race.isLoading;
 
   let rows:
-    | { position: string; driverName: string; constructorId: string; detail: string; subDetail?: string }[]
+    | {
+        position: string;
+        driverId: string;
+        driverName: string;
+        constructorId: string;
+        detail: string;
+        subDetail?: string;
+      }[]
     | undefined;
   if (kind === "qualifying") {
     rows = qualifying.data?.QualifyingResults?.map((r) => ({
       position: r.position,
+      driverId: r.Driver.driverId,
       driverName: `${r.Driver.givenName[0]}. ${r.Driver.familyName}`,
       constructorId: r.Constructor.constructorId,
       detail: r.Q3 ?? r.Q2 ?? r.Q1 ?? "—",
@@ -86,6 +94,7 @@ function SessionResultsModal({
   } else if (kind === "sprint") {
     rows = sprint.data?.SprintResults?.map((r) => ({
       position: r.position,
+      driverId: r.Driver.driverId,
       driverName: `${r.Driver.givenName[0]}. ${r.Driver.familyName}`,
       constructorId: r.Constructor.constructorId,
       detail: `${r.points} pts`,
@@ -94,6 +103,7 @@ function SessionResultsModal({
   } else {
     rows = race.data?.Results?.map((r) => ({
       position: r.position,
+      driverId: r.Driver.driverId,
       driverName: `${r.Driver.givenName[0]}. ${r.Driver.familyName}`,
       constructorId: r.Constructor.constructorId,
       detail: `${r.points} pts`,

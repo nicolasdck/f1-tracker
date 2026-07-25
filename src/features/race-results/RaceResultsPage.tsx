@@ -49,6 +49,7 @@ export function RaceResultsPage() {
     activeTab === "sprint"
       ? sprint.data?.SprintResults?.map((r) => ({
           position: r.position,
+          driverId: r.Driver.driverId,
           driverName: `${r.Driver.givenName[0]}. ${r.Driver.familyName}`,
           constructorId: r.Constructor.constructorId,
           detail: `${r.points} pts`,
@@ -57,12 +58,14 @@ export function RaceResultsPage() {
       : activeTab === "qualifying"
         ? qualifying.data?.QualifyingResults?.map((r) => ({
             position: r.position,
+            driverId: r.Driver.driverId,
             driverName: `${r.Driver.givenName[0]}. ${r.Driver.familyName}`,
             constructorId: r.Constructor.constructorId,
             detail: r.Q3 ?? r.Q2 ?? r.Q1 ?? "—",
           }))
         : race.data.Results.map((r) => ({
             position: r.position,
+            driverId: r.Driver.driverId,
             driverName: `${r.Driver.givenName[0]}. ${r.Driver.familyName}`,
             constructorId: r.Constructor.constructorId,
             detail: `${r.points} pts`,
