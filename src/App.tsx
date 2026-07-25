@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Settings } from 'lucide-react';
+import { Download, Settings } from 'lucide-react';
 import { TeamSelector } from '@/features/team-theme/TeamSelector';
 import { Modal } from '@/shared/ui/Modal';
+import { useInstallPrompt } from '@/pwa/InstallPromptProvider';
 import { CalendarPage } from '@/features/calendar/CalendarPage';
 import { RaceResultsPage } from '@/features/race-results/RaceResultsPage';
 import { StandingsPage } from '@/features/standings/StandingsPage';
@@ -55,11 +56,34 @@ function Header({ onOpenSettings }: { onOpenSettings: () => void }) {
 	);
 }
 
+function InstallBanner() {
+	const { canInstall, promptInstall } = useInstallPrompt();
+	if (!canInstall) return null;
+	return (
+		<div
+			className="flex items-center justify-between gap-3 px-4 py-2 text-sm"
+			style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-ink)' }}
+		>
+			<span className="flex items-center gap-2 font-medium">
+				<Download size={16} />
+				Installer Paddock sur cet appareil
+			</span>
+			<button
+				onClick={promptInstall}
+				className="shrink-0 rounded-full bg-black/15 px-3 py-1 font-medium transition hover:bg-black/25"
+			>
+				Installer
+			</button>
+		</div>
+	);
+}
+
 export default function App() {
 	const [settingsOpen, setSettingsOpen] = useState(false);
 	return (
 		<div className="min-h-screen font-sans">
 			<Header onOpenSettings={() => setSettingsOpen(true)} />
+			<InstallBanner />
 			<Modal
 				open={settingsOpen}
 				onClose={() => setSettingsOpen(false)}

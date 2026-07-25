@@ -4,12 +4,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { TeamThemeProvider } from "./features/team-theme/ThemeProvider";
+import { InstallPromptProvider } from "./pwa/InstallPromptProvider";
 import { setupServiceWorker } from "./pwa/registerServiceWorker";
-import { setupInstallPrompt } from "./pwa/installPrompt";
 import "./index.css";
 
 setupServiceWorker();
-setupInstallPrompt();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,9 +23,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <TeamThemeProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <InstallPromptProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </InstallPromptProvider>
       </TeamThemeProvider>
     </QueryClientProvider>
   </React.StrictMode>
