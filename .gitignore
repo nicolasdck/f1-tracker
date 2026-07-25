@@ -4,3 +4,6 @@ dist
 *.local
 
 .vercel
+*.tsbuildinfo
+api/**/*.js
+api/**/*.d.ts
