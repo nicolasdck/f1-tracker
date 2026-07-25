@@ -8,7 +8,8 @@ import {
 	useDriverStandings,
 	useStandingsEvolution,
 } from '@/shared/api/hooks';
-import { Skeleton } from '@/shared/ui/Skeleton';
+import { Loader } from '@/shared/ui/Loader';
+import { useMinDelay } from '@/shared/lib/useMinDelay';
 import { TableRow } from '@/shared/ui/Table';
 import { useTeamTheme } from '@/features/team-theme/ThemeProvider';
 import { getTeamTheme } from '@/features/team-theme/teamThemes';
@@ -135,6 +136,8 @@ export function StandingsPage() {
 	const evolutionLoading = isDrivers
 		? driverEvolutionLoading
 		: constructorEvolutionLoading;
+	const showCurrentLoader = useMinDelay(isLoading);
+	const showEvolutionLoader = useMinDelay(evolutionLoading);
 
 	return (
 		<div className="space-y-3 p-6">
@@ -152,12 +155,8 @@ export function StandingsPage() {
 			/>
 
 			{view === 'current' ? (
-				isLoading ? (
-					<div className="space-y-2">
-						{Array.from({ length: 8 }).map((_, i) => (
-							<Skeleton key={i} className="h-12 w-full" />
-						))}
-					</div>
+				showCurrentLoader ? (
+					<Loader />
 				) : isDrivers ? (
 					<div className="overflow-hidden rounded border border-white/8">
 						{driverStandings?.map((d, i) => {
@@ -237,8 +236,8 @@ export function StandingsPage() {
 						})}
 					</div>
 				)
-			) : evolutionLoading ? (
-				<Skeleton className="h-64 w-full" />
+			) : showEvolutionLoader ? (
+				<Loader />
 			) : (
 				<div className="rounded border border-white/8 bg-white/[0.02] p-4">
 					<div className="mb-3 flex items-center gap-1.5 text-xs text-white/40">

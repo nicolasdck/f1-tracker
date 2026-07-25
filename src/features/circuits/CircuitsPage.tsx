@@ -2,22 +2,18 @@ import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { useCurrentSeason } from '@/shared/api/hooks';
 import { Card } from '@/shared/ui/Card';
-import { Skeleton } from '@/shared/ui/Skeleton';
+import { Loader } from '@/shared/ui/Loader';
+import { useMinDelay } from '@/shared/lib/useMinDelay';
 import { getCountryFlagCode } from '@/shared/lib/flags';
 import { Flag } from '@/shared/ui/Flag';
 
 // Liste des circuits derivee du calendrier en cours (evite un appel API dedie)
 export function CircuitsPage() {
 	const { data: races, isLoading } = useCurrentSeason();
+	const showLoader = useMinDelay(isLoading);
 
-	if (isLoading) {
-		return (
-			<div className="space-y-2 p-6">
-				{Array.from({ length: 6 }).map((_, i) => (
-					<Skeleton key={i} className="h-14 w-full" />
-				))}
-			</div>
-		);
+	if (showLoader) {
+		return <Loader />;
 	}
 
 	return (

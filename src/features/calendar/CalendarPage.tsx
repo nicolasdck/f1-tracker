@@ -4,7 +4,8 @@ import { MapPin, ChevronRight } from 'lucide-react';
 import { useCurrentSeason } from '@/shared/api/hooks';
 import { Card } from '@/shared/ui/Card';
 import { Badge } from '@/shared/ui/Badge';
-import { Skeleton } from '@/shared/ui/Skeleton';
+import { Loader } from '@/shared/ui/Loader';
+import { useMinDelay } from '@/shared/lib/useMinDelay';
 import { formatDate } from '@/shared/lib/date';
 import { getCountryFlagCode } from '@/shared/lib/flags';
 import { Flag } from '@/shared/ui/Flag';
@@ -17,6 +18,7 @@ function isPast(dateStr: string) {
 
 export function CalendarPage() {
 	const { data: races, isLoading, error } = useCurrentSeason();
+	const showLoader = useMinDelay(isLoading);
 	const nextRaceRef = useRef<HTMLDivElement>(null);
 	const nextRoundForScroll = races?.find((r) => !isPast(r.date))?.round;
 
@@ -28,14 +30,8 @@ export function CalendarPage() {
 		});
 	}, [nextRoundForScroll]);
 
-	if (isLoading) {
-		return (
-			<div className="space-y-2 p-6">
-				{Array.from({ length: 6 }).map((_, i) => (
-					<Skeleton key={i} className="h-16 w-full" />
-				))}
-			</div>
-		);
+	if (showLoader) {
+		return <Loader />;
 	}
 
 	if (error) {
