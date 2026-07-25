@@ -1,5 +1,6 @@
 import { CSSProperties } from 'react';
 import { TeamId } from '@/features/team-theme/teamThemes';
+import { getTeamLogoUrl } from '@/features/team-theme/teamLogoUrls';
 
 export function TeamLogo({
 	teamId,
@@ -13,10 +14,10 @@ export function TeamLogo({
 	if (!teamId) return null;
 	return (
 		<img
-			src={`/team-logos/${teamId}.png`}
+			src={getTeamLogoUrl(teamId)}
 			alt=""
 			style={style}
-			className={`inline-block h-6 rounded object-cover ${className}`}
+			className={`inline-block h-5 w-5 shrink-0 object-contain ${className}`}
 		/>
 	);
 }

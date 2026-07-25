@@ -7,6 +7,7 @@ import { TeamLogo } from "@/shared/ui/TeamLogo";
 import { getCountryFlagCode, getNationalityFlagCode } from "@/shared/lib/flags";
 import { getTeamTheme } from "@/features/team-theme/teamThemes";
 import { CONSTRUCTOR_ID_MAP } from "@/features/team-theme/constructorIdMap";
+import { getTeamCarPhoto } from "./teamCarPhotos";
 
 function StatTile({ label, value }: { label: string; value: string }) {
   return (
@@ -36,6 +37,7 @@ export function TeamProfilePage() {
   const constructorInfo = entry?.Constructor ?? races?.[0]?.Results[0]?.Constructor;
   const mappedTeam = constructorInfo ? CONSTRUCTOR_ID_MAP[constructorInfo.constructorId] : undefined;
   const theme = mappedTeam ? getTeamTheme(mappedTeam) : undefined;
+  const carPhoto = constructorInfo ? getTeamCarPhoto(constructorInfo.constructorId) : undefined;
 
   if (!constructorInfo) {
     return <div className="p-6 text-sm text-white/50">Écurie introuvable.</div>;
@@ -55,17 +57,32 @@ export function TeamProfilePage() {
 
   return (
     <div className="p-6">
-      <div className="mb-4 flex items-center gap-4">
-        <TeamLogo
-          teamId={mappedTeam}
-          className="h-10 w-14 border"
-          style={{ borderColor: theme?.primary ?? "transparent" }}
-        />
-        <div>
-          <div className="text-lg font-medium text-white">{constructorInfo.name}</div>
-          <div className="flex items-center gap-1.5 text-xs text-white/50">
-            <Flag code={getNationalityFlagCode(constructorInfo.nationality)} />
-            {constructorInfo.nationality}
+      <div
+        className="mb-4 overflow-hidden rounded-lg border border-white/8"
+        style={{ backgroundColor: theme ? `${theme.primary}14` : undefined }}
+      >
+        {carPhoto && (
+          <img
+            src={carPhoto}
+            alt=""
+            className="h-28 w-full object-contain p-2"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
+          />
+        )}
+        <div className="flex items-center gap-4 p-4 pt-0">
+          <TeamLogo
+            teamId={mappedTeam}
+            className="h-10 w-14 border"
+            style={{ borderColor: theme?.primary ?? "transparent" }}
+          />
+          <div>
+            <div className="text-lg font-medium text-white">{constructorInfo.name}</div>
+            <div className="flex items-center gap-1.5 text-xs text-white/50">
+              <Flag code={getNationalityFlagCode(constructorInfo.nationality)} />
+              {constructorInfo.nationality}
+            </div>
           </div>
         </div>
       </div>

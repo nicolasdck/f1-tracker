@@ -7,6 +7,7 @@ import { TeamLogo } from "@/shared/ui/TeamLogo";
 import { getCountryFlagCode, getNationalityFlagCode } from "@/shared/lib/flags";
 import { getTeamTheme } from "@/features/team-theme/teamThemes";
 import { CONSTRUCTOR_ID_MAP } from "@/features/team-theme/constructorIdMap";
+import { getDriverPhoto } from "./driverPhotos";
 
 function StatTile({ label, value }: { label: string; value: string }) {
   return (
@@ -38,6 +39,7 @@ export function DriverProfilePage() {
   const constructorInfo = entry?.Constructors[0] ?? firstResult?.Constructor;
   const mappedTeam = constructorInfo ? CONSTRUCTOR_ID_MAP[constructorInfo.constructorId] : undefined;
   const theme = mappedTeam ? getTeamTheme(mappedTeam) : undefined;
+  const photo = driverId ? getDriverPhoto(driverId) : undefined;
 
   if (!driver) {
     return <div className="p-6 text-sm text-white/50">Pilote introuvable.</div>;
@@ -45,25 +47,40 @@ export function DriverProfilePage() {
 
   return (
     <div className="p-6">
-      <div className="mb-4 flex items-center gap-4">
-        <Flag code={getNationalityFlagCode(driver.nationality)} className="h-8 w-11" />
-        <div>
-          <div className="flex items-center gap-2 text-lg font-medium text-white">
-            {driver.givenName} {driver.familyName}
+      <div
+        className="mb-4 flex items-center justify-between gap-3 overflow-hidden rounded-lg border border-white/8"
+        style={{ backgroundColor: theme ? `${theme.primary}14` : undefined }}
+      >
+        <div className="p-4">
+          <div className="mb-1 flex items-center gap-2">
+            <Flag code={getNationalityFlagCode(driver.nationality)} />
             {driver.permanentNumber && (
-              <span className="font-mono text-sm text-white/40">#{driver.permanentNumber}</span>
+              <span className="font-mono text-xs text-white/40">#{driver.permanentNumber}</span>
             )}
+          </div>
+          <div className="text-lg font-medium text-white">
+            {driver.givenName} {driver.familyName}
           </div>
           {constructorInfo && (
             <Link
               to={`/teams/${constructorInfo.constructorId}`}
-              className="flex items-center gap-1.5 text-xs text-white/50 hover:text-white/80"
+              className="mt-1 flex items-center gap-1.5 text-xs text-white/50 hover:text-white/80"
             >
               <TeamLogo teamId={mappedTeam} />
               {constructorInfo.name}
             </Link>
           )}
         </div>
+        {photo && (
+          <img
+            src={photo}
+            alt=""
+            className="h-40 w-auto shrink-0 object-contain object-bottom"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
+          />
+        )}
       </div>
 
       {entry && (
