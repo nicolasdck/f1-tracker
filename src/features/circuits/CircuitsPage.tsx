@@ -3,7 +3,8 @@ import { ChevronRight } from 'lucide-react';
 import { useCurrentSeason } from '@/shared/api/hooks';
 import { Card } from '@/shared/ui/Card';
 import { Skeleton } from '@/shared/ui/Skeleton';
-import { getCountryFlag } from '@/shared/lib/flags';
+import { getCountryFlagCode } from '@/shared/lib/flags';
+import { Flag } from '@/shared/ui/Flag';
 
 // Liste des circuits derivee du calendrier en cours (evite un appel API dedie)
 export function CircuitsPage() {
@@ -38,7 +39,7 @@ export function CircuitsPage() {
 							/>
 							<div>
 								<div className="flex items-center gap-1.5 text-sm font-medium text-white">
-									<span>{getCountryFlag(race.Circuit.Location.country)}</span>
+									<Flag code={getCountryFlagCode(race.Circuit.Location.country)} />
 									{race.Circuit.circuitName}
 								</div>
 								<div className="text-xs text-white/40">

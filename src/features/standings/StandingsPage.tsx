@@ -12,7 +12,8 @@ import { TableRow } from "@/shared/ui/Table";
 import { useTeamTheme } from "@/features/team-theme/ThemeProvider";
 import { getTeamTheme } from "@/features/team-theme/teamThemes";
 import { CONSTRUCTOR_ID_MAP } from "@/features/team-theme/constructorIdMap";
-import { getNationalityFlag } from "@/shared/lib/flags";
+import { getNationalityFlagCode } from "@/shared/lib/flags";
+import { Flag } from "@/shared/ui/Flag";
 import { EvolutionChart } from "./EvolutionChart";
 
 type Category = "drivers" | "constructors";
@@ -59,17 +60,29 @@ export function StandingsPage() {
   const { teamId } = useTeamTheme();
   const { data: races } = useCurrentSeason();
 
-  const { data: driverStandings, isLoading: driversLoading } = useDriverStandings();
-  const { data: constructorStandings, isLoading: constructorsLoading } = useConstructorStandings();
+  const isDrivers = category === "drivers";
+
+  // Toujours necessaire (pas seulement en vue "Actuel"): sert aussi de legende
+  // (nom + ecurie) pour le graphique d'evolution. Un seul appel, pas cher.
+  const { data: driverStandings, isLoading: driversLoading } = useDriverStandings(undefined, isDrivers);
+  const { data: constructorStandings, isLoading: constructorsLoading } = useConstructorStandings(
+    undefined,
+    !isDrivers
+  );
 
   const completedRounds = useMemo(
     () => (races ?? []).filter((r) => isPast(r.date)).map((r) => Number(r.round)),
     [races]
   );
 
-  const { data: driverEvolutionRaw, isLoading: driverEvolutionLoading } = useStandingsEvolution(completedRounds);
-  const { data: constructorEvolutionRaw, isLoading: constructorEvolutionLoading } =
-    useConstructorStandingsEvolution(completedRounds);
+  const { data: driverEvolutionRaw, isLoading: driverEvolutionLoading } = useStandingsEvolution(
+    completedRounds,
+    isDrivers && view === "evolution"
+  );
+  const { data: constructorEvolutionRaw, isLoading: constructorEvolutionLoading } = useConstructorStandingsEvolution(
+    completedRounds,
+    !isDrivers && view === "evolution"
+  );
 
   const driverChartData = useMemo(() => {
     if (!driverEvolutionRaw) return [];
@@ -109,7 +122,6 @@ export function StandingsPage() {
     }));
   }, [constructorStandings]);
 
-  const isDrivers = category === "drivers";
   const isLoading = isDrivers ? driversLoading : constructorsLoading;
   const evolutionLoading = isDrivers ? driverEvolutionLoading : constructorEvolutionLoading;
 
@@ -147,7 +159,7 @@ export function StandingsPage() {
                     <span className="w-5 font-mono text-white/40">{d.position}</span>
                     {theme && <span className="h-2 w-2 rounded-full" style={{ backgroundColor: theme.primary }} />}
                     <span className="text-white">
-                      <span className="mr-1.5">{getNationalityFlag(d.Driver.nationality)}</span>
+                      <Flag code={getNationalityFlagCode(d.Driver.nationality)} className="mr-1.5" />
                       {d.Driver.givenName[0]}. {d.Driver.familyName}
                     </span>
                   </div>
@@ -168,7 +180,7 @@ export function StandingsPage() {
                     <span className="w-5 font-mono text-white/40">{c.position}</span>
                     {theme && <span className="h-2 w-2 rounded-full" style={{ backgroundColor: theme.primary }} />}
                     <span className="text-white">
-                      <span className="mr-1.5">{getNationalityFlag(c.Constructor.nationality)}</span>
+                      <Flag code={getNationalityFlagCode(c.Constructor.nationality)} className="mr-1.5" />
                       {c.Constructor.name}
                     </span>
                   </div>

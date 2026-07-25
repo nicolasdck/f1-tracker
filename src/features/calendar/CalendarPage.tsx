@@ -6,7 +6,8 @@ import { Card } from '@/shared/ui/Card';
 import { Badge } from '@/shared/ui/Badge';
 import { Skeleton } from '@/shared/ui/Skeleton';
 import { formatDate } from '@/shared/lib/date';
-import { getCountryFlag } from '@/shared/lib/flags';
+import { getCountryFlagCode } from '@/shared/lib/flags';
+import { Flag } from '@/shared/ui/Flag';
 import { SessionsPanel } from './SessionsPanel';
 
 function isPast(dateStr: string) {
@@ -63,7 +64,7 @@ export function CalendarPage() {
 								</span>
 								<div>
 									<div className="flex items-center gap-1.5 text-sm font-medium text-white">
-										<span>{getCountryFlag(race.Circuit.Location.country)}</span>
+										<Flag code={getCountryFlagCode(race.Circuit.Location.country)} />
 										{race.raceName}
 									</div>
 									<div className="flex items-center gap-1 text-xs text-white/40">

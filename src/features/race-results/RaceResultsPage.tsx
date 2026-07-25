@@ -4,6 +4,7 @@ import { useQualifyingResults, useRaceResults, useSprintResults } from "@/shared
 import { Skeleton } from "@/shared/ui/Skeleton";
 import { useTeamTheme } from "@/features/team-theme/ThemeProvider";
 import { ResultsList } from "./ResultsList";
+import { LollipopmanVideo } from "./LollipopmanVideo";
 import { LOLLIPOPMAN_VIDEOS } from "./lollipopmanVideos";
 
 type Tab = "sprint" | "qualifying" | "race";
@@ -79,27 +80,7 @@ export function RaceResultsPage() {
         <div className="text-xs text-white/40">{race.data.Circuit.circuitName}</div>
       </div>
 
-      {videoId && (
-        <div className="mb-4">
-          <a
-            href="https://www.youtube.com/@lollipopmancomics"
-            target="_blank"
-            rel="noreferrer"
-            className="mb-2 inline-block text-[10px] font-mono uppercase tracking-widest text-white/40 hover:text-white/70"
-          >
-            Lollipopman Comics
-          </a>
-          <div className="relative w-full overflow-hidden rounded-lg border border-white/8 pb-[56.25%]">
-            <iframe
-              src={`https://www.youtube.com/embed/${videoId}`}
-              title="Lollipopman Comics"
-              className="absolute inset-0 h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          </div>
-        </div>
-      )}
+      {videoId && <LollipopmanVideo videoId={videoId} />}
 
       {tabs.length > 1 && (
         <div className="mb-4 flex w-fit items-center gap-1 rounded-full bg-white/5 p-1">
