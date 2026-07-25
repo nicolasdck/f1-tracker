@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+	Routes,
+	Route,
+	Link,
+	useLocation,
+	useNavigate,
+} from 'react-router-dom';
 import { Download, Settings } from 'lucide-react';
 import { TeamSelector } from '@/features/team-theme/TeamSelector';
 import { Modal } from '@/shared/ui/Modal';
@@ -61,7 +67,7 @@ function Header({ onOpenSettings }: { onOpenSettings: () => void }) {
 						<Link
 							key={item.to}
 							to={item.to}
-							className="rounded-full px-4 py-1.5 text-sm font-medium transition"
+							className="rounded-full px-4 py-1.5 text-base font-medium transition"
 							style={
 								active
 									? {
@@ -107,7 +113,6 @@ function InstallBanner() {
 
 export default function App() {
 	const [settingsOpen, setSettingsOpen] = useState(false);
-	useRestoreLastPath();
 	return (
 		<div className="min-h-screen font-sans">
 			<Header onOpenSettings={() => setSettingsOpen(true)} />

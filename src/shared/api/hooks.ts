@@ -41,7 +41,7 @@ export function useCurrentSeason() {
 export function useRaceResults(round: number, enabled = true) {
   return useQuery({
     queryKey: ["race", round, "results"],
-    queryFn: async () => (await jolpica.raceResults(round)).MRData.RaceTable.Races[0],
+    queryFn: async () => (await jolpica.raceResults(round)).MRData.RaceTable.Races[0] ?? null,
     enabled: !!round && enabled,
   });
 }
@@ -49,7 +49,7 @@ export function useRaceResults(round: number, enabled = true) {
 export function useQualifyingResults(round: number, enabled = true) {
   return useQuery({
     queryKey: ["race", round, "qualifying"],
-    queryFn: async () => (await jolpica.qualifyingResults(round)).MRData.RaceTable.Races[0],
+    queryFn: async () => (await jolpica.qualifyingResults(round)).MRData.RaceTable.Races[0] ?? null,
     enabled: !!round && enabled,
   });
 }
@@ -57,7 +57,7 @@ export function useQualifyingResults(round: number, enabled = true) {
 export function useSprintResults(round: number, enabled = true) {
   return useQuery({
     queryKey: ["race", round, "sprint"],
-    queryFn: async () => (await jolpica.sprintResults(round)).MRData.RaceTable.Races[0],
+    queryFn: async () => (await jolpica.sprintResults(round)).MRData.RaceTable.Races[0] ?? null,
     enabled: !!round && enabled,
   });
 }

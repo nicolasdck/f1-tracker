@@ -64,7 +64,9 @@ export function CalendarPage() {
 								</span>
 								<div>
 									<div className="flex items-center gap-1.5 text-sm font-medium text-white">
-										<Flag code={getCountryFlagCode(race.Circuit.Location.country)} />
+										<Flag
+											code={getCountryFlagCode(race.Circuit.Location.country)}
+										/>
 										{race.raceName}
 									</div>
 									<div className="flex items-center gap-1 text-xs text-white/40">
@@ -74,7 +76,7 @@ export function CalendarPage() {
 								</div>
 							</div>
 							{isNext ? (
-								<Badge variant="primary">Prochaine</Badge>
+								<Badge variant="primary">En Cours</Badge>
 							) : done ? (
 								<ChevronRight size={16} className="text-white/25" />
 							) : (

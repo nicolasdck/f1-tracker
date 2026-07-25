@@ -5,7 +5,7 @@ import { Skeleton } from "@/shared/ui/Skeleton";
 import { useTeamTheme } from "@/features/team-theme/ThemeProvider";
 import { ResultsList } from "./ResultsList";
 import { LollipopmanVideo } from "./LollipopmanVideo";
-import { LOLLIPOPMAN_VIDEOS } from "./lollipopmanVideos";
+import { useLollipopmanVideo } from "./useLollipopmanVideo";
 
 type Tab = "sprint" | "qualifying" | "race";
 
@@ -17,6 +17,7 @@ export function RaceResultsPage() {
   const race = useRaceResults(roundNumber);
   const qualifying = useQualifyingResults(roundNumber);
   const sprint = useSprintResults(roundNumber);
+  const lollipopmanVideo = useLollipopmanVideo(race.data);
 
   const hasSprint = !!sprint.data?.SprintResults?.length;
   const hasQualifying = !!qualifying.data?.QualifyingResults?.length;
@@ -71,7 +72,7 @@ export function RaceResultsPage() {
   const rowsLoading =
     activeTab === "sprint" ? sprint.isLoading : activeTab === "qualifying" ? qualifying.isLoading : race.isLoading;
 
-  const videoId = LOLLIPOPMAN_VIDEOS[race.data.Circuit.circuitId];
+  const videoId = lollipopmanVideo.data;
 
   return (
     <div className="p-6">
