@@ -11,7 +11,7 @@ import { getTeamCarPhoto } from "./teamCarPhotos";
 
 function StatTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-white/8 bg-white/[0.02] p-3 text-center">
+    <div className="rounded-lg border border-black/20 bg-white/[0.02] p-3 text-center">
       <div className="font-mono text-xl font-semibold text-white">{value}</div>
       <div className="text-[10px] uppercase tracking-widest text-white/40">{label}</div>
     </div>
@@ -58,7 +58,7 @@ export function TeamProfilePage() {
   return (
     <div className="p-6">
       <div
-        className="mb-4 overflow-hidden rounded-lg border border-white/8"
+        className="mb-4 overflow-hidden rounded-lg border border-black/20"
         style={{ backgroundColor: theme ? `${theme.primary}14` : undefined }}
       >
         {carPhoto && (
@@ -96,7 +96,7 @@ export function TeamProfilePage() {
       )}
 
       <div className="mb-2 text-xs font-mono uppercase tracking-widest text-white/40">Saison en cours</div>
-      <div className="overflow-hidden rounded-lg border border-white/8">
+      <div className="overflow-hidden rounded-lg border border-black/20">
         {rows.map((r, i) => (
           <TableRow key={`${r.round}-${r.driverId}`} index={i}>
             <div className="flex items-center gap-3">

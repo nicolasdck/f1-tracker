@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react';
 import { TEAM_THEMES } from './teamThemes';
 import { useTeamTheme } from './ThemeProvider';
+import { getTeamLogoUrl } from './teamLogoUrls';
 
 export function TeamSelector() {
 	const { teamId, setTeamId } = useTeamTheme();
@@ -12,10 +13,10 @@ export function TeamSelector() {
 					<button
 						key={t.id}
 						onClick={() => setTeamId(t.id)}
-						className="relative flex flex-col items-center gap-2 rounded border p-3 transition"
+						className="relative flex flex-col items-center gap-2 rounded p-3 transition"
 						style={{
-							borderColor: active ? t.primary : 'rgba(255,255,255,0.1)',
-							backgroundColor: active ? `${t.primary}1a` : 'transparent',
+							border: active ? `1px solid ${t.primary}` : '1px solid transparent',
+							backgroundColor: active ? `${t.primary}26` : `${t.primary}0d`,
 						}}
 					>
 						{active && (
@@ -27,9 +28,9 @@ export function TeamSelector() {
 							</span>
 						)}
 						<img
-							src={`/${t.id}.jpg`}
+							src={getTeamLogoUrl(t.id)}
 							alt={t.name}
-							className="h-12 w-full rounded object-contain"
+							className="h-10 w-10 object-contain"
 						/>
 						<span
 							className="text-center text-xs font-medium"

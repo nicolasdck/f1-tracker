@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Trophy } from "lucide-react";
+import { ChevronRight, Trophy } from "lucide-react";
 import { Race, RaceSession } from "@/shared/api/jolpicaClient";
 import { useQualifyingResults, useRaceResults, useSprintResults } from "@/shared/api/hooks";
 import { Modal } from "@/shared/ui/Modal";
@@ -130,10 +130,34 @@ function SessionResultsModal({
 
 export function SessionsPanel({ race }: { race: Race }) {
   const [openSession, setOpenSession] = useState<{ kind: SessionKind; label: string } | null>(null);
+  const round = Number(race.round);
+  const sessions = buildSessions(race);
+
+  const isDone = (s: SessionDef) => getStatus(s.session, s.durationMin) === "done";
+  const needQualifying = sessions.some((s) => s.resultsKind === "qualifying" && isDone(s));
+  const needSprint = sessions.some((s) => s.resultsKind === "sprint" && isDone(s));
+  const needRace = sessions.some((s) => s.resultsKind === "race" && isDone(s));
+
+  // Fetch eager (partage le cache React Query avec la modale - l'ouverture
+  // sera instantanee) pour pouvoir afficher le nom du vainqueur directement,
+  // sans avoir a cliquer.
+  const qualifying = useQualifyingResults(round, needQualifying);
+  const sprint = useSprintResults(round, needSprint);
+  const raceResults = useRaceResults(round, needRace);
+
+  function winnerName(kind: SessionKind): string | undefined {
+    const winner =
+      kind === "qualifying"
+        ? qualifying.data?.QualifyingResults?.[0]
+        : kind === "sprint"
+          ? sprint.data?.SprintResults?.[0]
+          : raceResults.data?.Results?.[0];
+    return winner ? `${winner.Driver.givenName[0]}. ${winner.Driver.familyName}` : undefined;
+  }
 
   return (
     <div className="mt-3 grid grid-cols-1 gap-x-4 gap-y-1.5 border-t border-white/10 pt-3 text-xs sm:grid-cols-4">
-      {buildSessions(race).map(({ key, label, session, durationMin, resultsKind }) => {
+      {sessions.map(({ key, label, session, durationMin, resultsKind }) => {
         const status = getStatus(session, durationMin);
         return (
           <div key={key} className="flex items-center justify-between gap-2">
@@ -143,10 +167,12 @@ export function SessionsPanel({ race }: { race: Race }) {
             ) : status === "done" && resultsKind ? (
               <button
                 onClick={() => setOpenSession({ kind: resultsKind, label })}
-                className="flex items-center gap-1 font-mono text-white/80 transition hover:text-[var(--color-primary)]"
+                className="flex items-center gap-1 rounded-full bg-white/5 py-0.5 pl-2 pr-1.5 font-mono text-white/80 transition hover:bg-white/10 hover:text-[var(--color-primary)]"
                 aria-label={`Résultats — ${label}`}
               >
-                <Trophy size={12} />
+                <Trophy size={11} className="shrink-0 text-yellow-400" />
+                {winnerName(resultsKind) ?? "Résultats"}
+                <ChevronRight size={13} className="shrink-0 text-white/30" />
               </button>
             ) : (
               <span className={`font-mono ${status === "done" ? "text-white/30" : "text-white/80"}`}>
@@ -160,7 +186,7 @@ export function SessionsPanel({ race }: { race: Race }) {
       {openSession && (
         <SessionResultsModal
           kind={openSession.kind}
-          round={Number(race.round)}
+          round={round}
           label={openSession.label}
           onClose={() => setOpenSession(null)}
         />

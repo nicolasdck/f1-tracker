@@ -51,7 +51,10 @@ const NAV = [
 function Header({ onOpenSettings }: { onOpenSettings: () => void }) {
 	const location = useLocation();
 	return (
-		<div className="flex flex-col items-center justify-between border-b border-white/10 px-3 py-2">
+		<div
+			className="flex flex-col items-center justify-between border-b border-white/10 px-3 py-2"
+			style={{ backgroundColor: '#0B0D10' }}
+		>
 			<div className="w-full flex items-center justify-between gap-2 mb-3">
 				<img src="/f1.png" alt="F1" width="150" height="100" className="" />
 				<button

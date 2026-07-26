@@ -11,7 +11,7 @@ import { getDriverPhoto } from "./driverPhotos";
 
 function StatTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-white/8 bg-white/[0.02] p-3 text-center">
+    <div className="rounded-lg border border-black/20 bg-white/[0.02] p-3 text-center">
       <div className="font-mono text-xl font-semibold text-white">{value}</div>
       <div className="text-[10px] uppercase tracking-widest text-white/40">{label}</div>
     </div>
@@ -48,7 +48,7 @@ export function DriverProfilePage() {
   return (
     <div className="p-6">
       <div
-        className="mb-4 flex items-center justify-between gap-3 overflow-hidden rounded-lg border border-white/8"
+        className="mb-4 flex items-center justify-between gap-3 overflow-hidden rounded-lg border border-black/20"
         style={{ backgroundColor: theme ? `${theme.primary}14` : undefined }}
       >
         <div className="p-4">
@@ -92,7 +92,7 @@ export function DriverProfilePage() {
       )}
 
       <div className="mb-2 text-xs font-mono uppercase tracking-widest text-white/40">Saison en cours</div>
-      <div className="overflow-hidden rounded-lg border border-white/8">
+      <div className="overflow-hidden rounded-lg border border-black/20">
         {races?.map((race, i) => {
           const result = race.Results[0];
           const isFavRow = mappedTeam === CONSTRUCTOR_ID_MAP[result.Constructor.constructorId];

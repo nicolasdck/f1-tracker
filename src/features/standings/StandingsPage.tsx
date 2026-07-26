@@ -158,7 +158,7 @@ export function StandingsPage() {
 				showCurrentLoader ? (
 					<Loader />
 				) : isDrivers ? (
-					<div className="overflow-hidden rounded border border-white/8">
+					<div className="overflow-hidden rounded border border-black/20">
 						{driverStandings?.map((d, i) => {
 							const mappedTeam =
 								CONSTRUCTOR_ID_MAP[d.Constructors[0]?.constructorId];
@@ -197,7 +197,7 @@ export function StandingsPage() {
 						})}
 					</div>
 				) : (
-					<div className="overflow-hidden rounded border border-white/8">
+					<div className="overflow-hidden rounded border border-black/20">
 						{constructorStandings?.map((c, i) => {
 							const mappedTeam =
 								CONSTRUCTOR_ID_MAP[c.Constructor.constructorId];
@@ -239,7 +239,7 @@ export function StandingsPage() {
 			) : showEvolutionLoader ? (
 				<Loader />
 			) : (
-				<div className="rounded border border-white/8 bg-white/[0.02] p-4">
+				<div className="rounded border border-black/20 bg-white/[0.02] p-4">
 					<div className="mb-3 flex items-center gap-1.5 text-xs text-white/40">
 						<TrendingUp size={12} /> Points cumulés par round
 					</div>

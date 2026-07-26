@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQualifyingResults, useRaceResults, useSprintResults } from "@/shared/api/hooks";
 import { Skeleton } from "@/shared/ui/Skeleton";
+import { Loader } from "@/shared/ui/Loader";
 import { useTeamTheme } from "@/features/team-theme/ThemeProvider";
 import { ResultsList } from "./ResultsList";
 import { LollipopmanVideo } from "./LollipopmanVideo";
@@ -84,7 +85,13 @@ export function RaceResultsPage() {
         <div className="text-xs text-white/40">{race.data.Circuit.circuitName}</div>
       </div>
 
-      {videoId && <LollipopmanVideo videoId={videoId} />}
+      {lollipopmanVideo.isLoading ? (
+        <div className="mb-4">
+          <Loader size={32} />
+        </div>
+      ) : videoId ? (
+        <LollipopmanVideo videoId={videoId} />
+      ) : null}
 
       {tabs.length > 1 && (
         <div className="mb-4 flex w-fit items-center gap-1 rounded-full bg-white/5 p-1">

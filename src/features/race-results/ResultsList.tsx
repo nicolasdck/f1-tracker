@@ -22,7 +22,7 @@ export function ResultsList({
 	favoriteTeam?: TeamId;
 }) {
 	return (
-		<div className="overflow-hidden rounded border border-white/8">
+		<div className="overflow-hidden rounded border border-black/20">
 			{rows.map((r, i) => {
 				const mappedTeam = CONSTRUCTOR_ID_MAP[r.constructorId];
 				const theme = mappedTeam ? getTeamTheme(mappedTeam) : undefined;

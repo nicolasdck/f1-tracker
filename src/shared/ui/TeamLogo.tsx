@@ -11,7 +11,16 @@ export function TeamLogo({
 	className?: string;
 	style?: CSSProperties;
 }) {
-	if (!teamId) return null;
+	if (!teamId) {
+		// Ecurie historique non mappee (vieux constructeur, etc.) - un placeholder
+		// garde l'alignement des colonnes au lieu de laisser un trou.
+		return (
+			<span
+				style={style}
+				className={`inline-block h-5 w-5 shrink-0 rounded-sm border border-white/10 bg-white/5 ${className}`}
+			/>
+		);
+	}
 	return (
 		<img
 			src={getTeamLogoUrl(teamId)}

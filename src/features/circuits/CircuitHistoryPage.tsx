@@ -30,17 +30,17 @@ export function CircuitHistoryPage() {
 				{sorted[0]?.Circuit.circuitName ?? circuitId} — historique des
 				vainqueurs
 			</div>
-			<div className="mb-4 flex items-center justify-center rounded border border-white/8 bg-white/[0.02] p-6">
+			<div className="mb-4 flex items-center justify-center rounded border border-black/20 bg-white/[0.02] p-6">
 				<img
 					src={`/circuits/${circuitId}.png`}
 					alt={`Tracé du circuit ${sorted[0]?.Circuit.circuitName ?? circuitId}`}
-					className="max-h-52 w-full object-contain"
+					className="max-h-52 max-w-full object-contain"
 					onError={(e) => {
 						e.currentTarget.style.display = 'none';
 					}}
 				/>
 			</div>
-			<div className="overflow-hidden rounded border border-white/8">
+			<div className="overflow-hidden rounded border border-black/20">
 				{sorted.map((race, i) => {
 					const winner = race.Results?.[0];
 					if (!winner) return null;
