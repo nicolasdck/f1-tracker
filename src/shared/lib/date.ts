@@ -23,3 +23,16 @@ export function formatSessionTime(dateStr: string, timeStr?: string): string {
   const date = new Date(timeStr ? `${dateStr}T${timeStr}` : dateStr);
   return sessionTimeFormatter.format(date);
 }
+
+const RACE_DURATION_MS = 2 * 60 * 60 * 1000;
+
+/**
+ * Vrai une fois la course reellement terminee (heure de depart + duree
+ * estimee), pas juste passe minuit UTC le jour J - sinon la course du jour
+ * bascule "passee" des 00h00 UTC (~2h du matin en Europe), des heures avant
+ * qu'elle n'ait meme commence.
+ */
+export function isRacePast(dateStr: string, timeStr?: string): boolean {
+  const start = new Date(timeStr ? `${dateStr}T${timeStr}` : dateStr).getTime();
+  return Date.now() > start + RACE_DURATION_MS;
+}

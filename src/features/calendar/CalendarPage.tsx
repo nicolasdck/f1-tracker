@@ -6,21 +6,21 @@ import { Card } from '@/shared/ui/Card';
 import { Badge } from '@/shared/ui/Badge';
 import { Loader } from '@/shared/ui/Loader';
 import { useMinDelay } from '@/shared/lib/useMinDelay';
-import { formatDate } from '@/shared/lib/date';
+import { formatDate, isRacePast } from '@/shared/lib/date';
 import { getCountryFlagCode } from '@/shared/lib/flags';
 import { Flag } from '@/shared/ui/Flag';
 import { SessionsPanel } from './SessionsPanel';
 import { Countdown } from './Countdown';
 
-function isPast(dateStr: string) {
-	return new Date(dateStr) < new Date();
+function isPast(race: { date: string; time?: string }) {
+	return isRacePast(race.date, race.time);
 }
 
 export function CalendarPage() {
 	const { data: races, isLoading, error } = useCurrentSeason();
 	const showLoader = useMinDelay(isLoading);
 	const nextRaceRef = useRef<HTMLDivElement>(null);
-	const nextRoundForScroll = races?.find((r) => !isPast(r.date))?.round;
+	const nextRoundForScroll = races?.find((r) => !isPast(r))?.round;
 
 	useEffect(() => {
 		if (!nextRoundForScroll) return;
@@ -42,12 +42,12 @@ export function CalendarPage() {
 		);
 	}
 
-	const nextRace = races?.find((r) => !isPast(r.date));
+	const nextRace = races?.find((r) => !isPast(r));
 
 	return (
 		<div className="space-y-2 p-6">
 			{races?.map((race) => {
-				const done = isPast(race.date);
+				const done = isPast(race);
 				const isNext = race.round === nextRace?.round;
 				const cardBody = (
 					<Card

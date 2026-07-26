@@ -10,6 +10,7 @@ import {
 } from '@/shared/api/hooks';
 import { Loader } from '@/shared/ui/Loader';
 import { useMinDelay } from '@/shared/lib/useMinDelay';
+import { isRacePast } from '@/shared/lib/date';
 import { TableRow } from '@/shared/ui/Table';
 import { useTeamTheme } from '@/features/team-theme/ThemeProvider';
 import { getTeamTheme } from '@/features/team-theme/teamThemes';
@@ -21,10 +22,6 @@ import { EvolutionChart } from './EvolutionChart';
 
 type Category = 'drivers' | 'constructors';
 type View = 'current' | 'evolution';
-
-function isPast(dateStr: string) {
-	return new Date(dateStr) < new Date();
-}
 
 function Pills<T extends string>({
 	options,
@@ -77,7 +74,7 @@ export function StandingsPage() {
 
 	const completedRounds = useMemo(
 		() =>
-			(races ?? []).filter((r) => isPast(r.date)).map((r) => Number(r.round)),
+			(races ?? []).filter((r) => isRacePast(r.date, r.time)).map((r) => Number(r.round)),
 		[races],
 	);
 

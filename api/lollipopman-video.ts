@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { findLollipopmanVideo } from "./_lib/lollipopmanLookup";
+import { findLollipopmanVideo } from "./_lib/lollipopmanLookup.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const apiKey = process.env.YOUTUBE_API_KEY;
