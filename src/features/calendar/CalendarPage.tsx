@@ -6,11 +6,16 @@ import { Card } from '@/shared/ui/Card';
 import { Badge } from '@/shared/ui/Badge';
 import { Loader } from '@/shared/ui/Loader';
 import { useMinDelay } from '@/shared/lib/useMinDelay';
-import { formatDate, isRacePast, isRaceWeekendStarted } from '@/shared/lib/date';
+import {
+	formatDate,
+	isRacePast,
+	isRaceWeekendStarted,
+} from '@/shared/lib/date';
 import { getCountryFlagCode } from '@/shared/lib/flags';
 import { Flag } from '@/shared/ui/Flag';
 import { SessionsPanel } from './SessionsPanel';
 import { Countdown } from './Countdown';
+import { useTeamTheme } from '@/features/team-theme/ThemeProvider';
 
 function isPast(race: { date: string; time?: string }) {
 	return isRacePast(race.date, race.time);
@@ -21,6 +26,8 @@ export function CalendarPage() {
 	const showLoader = useMinDelay(isLoading);
 	const nextRaceRef = useRef<HTMLDivElement>(null);
 	const nextRoundForScroll = races?.find((r) => !isPast(r))?.round;
+
+	const { teamId } = useTeamTheme();
 
 	useEffect(() => {
 		// Le loader reste affiche au moins 1s (useMinDelay): tant que showLoader
@@ -56,7 +63,8 @@ export function CalendarPage() {
 				const cardBody = (
 					<Card
 						ref={isNext ? nextRaceRef : undefined}
-						className={`px-4 py-3 ${done ? 'transition hover:border-white/20' : ''}`}
+						className={`bg-black/15 px-4 py-3 ${done ? 'transition hover:border-white/20' : ''}`}
+						favoriteTeam={teamId}
 					>
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-4">
@@ -64,13 +72,13 @@ export function CalendarPage() {
 									{race.round.padStart(2, '0')}
 								</span>
 								<div>
-									<div className="flex items-center gap-1.5 text-sm font-medium text-white">
+									<div className="flex items-center gap-1.5 text-base font-medium text-white">
 										<Flag
 											code={getCountryFlagCode(race.Circuit.Location.country)}
 										/>
 										{race.raceName}
 									</div>
-									<div className="flex items-center gap-1 text-xs text-white/40">
+									<div className="flex items-center gap-1 text-sm text-white/40">
 										<MapPin size={11} /> {race.Circuit.Location.locality} ·{' '}
 										{formatDate(race.date, race.time)}
 									</div>
