@@ -6,7 +6,7 @@ import { Card } from '@/shared/ui/Card';
 import { Badge } from '@/shared/ui/Badge';
 import { Loader } from '@/shared/ui/Loader';
 import { useMinDelay } from '@/shared/lib/useMinDelay';
-import { formatDate, isRacePast } from '@/shared/lib/date';
+import { formatDate, isRacePast, isRaceWeekendStarted } from '@/shared/lib/date';
 import { getCountryFlagCode } from '@/shared/lib/flags';
 import { Flag } from '@/shared/ui/Flag';
 import { SessionsPanel } from './SessionsPanel';
@@ -23,12 +23,15 @@ export function CalendarPage() {
 	const nextRoundForScroll = races?.find((r) => !isPast(r))?.round;
 
 	useEffect(() => {
-		if (!nextRoundForScroll) return;
+		// Le loader reste affiche au moins 1s (useMinDelay): tant que showLoader
+		// est true, la liste n'est pas montee et la ref est encore null - il faut
+		// que l'effet se redeclenche une fois la liste reellement affichee.
+		if (!nextRoundForScroll || showLoader) return;
 		nextRaceRef.current?.scrollIntoView({
 			behavior: 'smooth',
 			block: 'center',
 		});
-	}, [nextRoundForScroll]);
+	}, [nextRoundForScroll, showLoader]);
 
 	if (showLoader) {
 		return <Loader />;
@@ -49,6 +52,7 @@ export function CalendarPage() {
 			{races?.map((race) => {
 				const done = isPast(race);
 				const isNext = race.round === nextRace?.round;
+				const isCurrent = isNext && isRaceWeekendStarted(race.date, race.time);
 				const cardBody = (
 					<Card
 						ref={isNext ? nextRaceRef : undefined}
@@ -72,7 +76,7 @@ export function CalendarPage() {
 									</div>
 								</div>
 							</div>
-							{isNext ? (
+							{isCurrent ? (
 								<Badge variant="primary">En Cours</Badge>
 							) : done ? (
 								<ChevronRight size={16} className="text-white/25" />

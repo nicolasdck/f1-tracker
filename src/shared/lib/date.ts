@@ -36,3 +36,16 @@ export function isRacePast(dateStr: string, timeStr?: string): boolean {
   const start = new Date(timeStr ? `${dateStr}T${timeStr}` : dateStr).getTime();
   return Date.now() > start + RACE_DURATION_MS;
 }
+
+const WEEKEND_LOOKAHEAD_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Vrai a partir de la veille de la course (debut du week-end de course).
+ * Sert a distinguer "prochaine course" (chronologiquement) de "en cours"
+ * (le week-end a reellement commence) - une course dans 3 semaines ne doit
+ * pas afficher "en cours" juste parce que c'est la suivante.
+ */
+export function isRaceWeekendStarted(dateStr: string, timeStr?: string): boolean {
+  const start = new Date(timeStr ? `${dateStr}T${timeStr}` : dateStr).getTime();
+  return Date.now() >= start - WEEKEND_LOOKAHEAD_MS;
+}
